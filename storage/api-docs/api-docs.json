@@ -1,0 +1,827 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Dokumentasi API Methodly",
+        "description": "Dokumentasi API untuk sistem Backend Methodly.",
+        "contact": {
+            "email": "support@methodly.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Server API Methodly"
+        }
+    ],
+    "paths": {
+        "/api/v1/admin/permissions": {
+            "get": {
+                "tags": [
+                    "Manajemen Izin"
+                ],
+                "summary": "Daftar semua izin",
+                "operationId": "84e762400fbd145cfc4ec6067b3d7403",
+                "responses": {
+                    "200": {
+                        "description": "Daftar izin berhasil diambil"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Manajemen Izin"
+                ],
+                "summary": "Buat izin baru",
+                "operationId": "d89fe3e43f660e5007c4d0f458689c52",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "delete articles"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Izin berhasil dibuat"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/permissions/{id}": {
+            "delete": {
+                "tags": [
+                    "Manajemen Izin"
+                ],
+                "summary": "Hapus izin",
+                "operationId": "f024f2e22f0c6dc0b29dc90445c37f51",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Izin berhasil dihapus"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/roles": {
+            "get": {
+                "tags": [
+                    "Manajemen Role"
+                ],
+                "summary": "Daftar semua role",
+                "operationId": "90631fac9c850d5d94147a2809e94f31",
+                "responses": {
+                    "200": {
+                        "description": "Daftar role berhasil diambil"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Manajemen Role"
+                ],
+                "summary": "Buat role baru",
+                "operationId": "e87448a055011802d3f694eda07e8c1a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "editor"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Role berhasil dibuat"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/roles/{id}": {
+            "get": {
+                "tags": [
+                    "Manajemen Role"
+                ],
+                "summary": "Detail role",
+                "operationId": "0cb96e8a9a318a0655368c9f2fc1be6a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail role berhasil diambil"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Manajemen Role"
+                ],
+                "summary": "Update nama role",
+                "operationId": "3ddd86b403c0cfedd28fdf03f7ef7d0c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "editor-senior"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Role berhasil diupdate"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Manajemen Role"
+                ],
+                "summary": "Hapus role",
+                "operationId": "7d91f04ddbc9ec3b4bda5565e82691f8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role berhasil dihapus"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/roles/{id}/permissions": {
+            "post": {
+                "tags": [
+                    "Manajemen Role"
+                ],
+                "summary": "Sinkronisasi izin ke role",
+                "description": "Menghapus semua izin lama dan menggantinya dengan daftar izin yang baru",
+                "operationId": "52b8a17b2c0845696504d234564845b8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "permissions"
+                                ],
+                                "properties": {
+                                    "permissions": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "example": "manage users"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Izin berhasil disinkronisasi"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/users": {
+            "get": {
+                "tags": [
+                    "Manajemen User Admin"
+                ],
+                "summary": "Daftar semua user",
+                "operationId": "5277e8d1c017eaf6a72441766b4d1e25",
+                "responses": {
+                    "200": {
+                        "description": "Daftar user berhasil diambil"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/users/{id}/roles": {
+            "post": {
+                "tags": [
+                    "Manajemen User Admin"
+                ],
+                "summary": "Sinkronisasi role ke user",
+                "operationId": "5eafba5e99c42559c33af1ad3dcdf60a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "roles"
+                                ],
+                                "properties": {
+                                    "roles": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "example": "instructor"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Role berhasil diperbarui"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/users/{id}": {
+            "delete": {
+                "tags": [
+                    "Manajemen User Admin"
+                ],
+                "summary": "Hapus user",
+                "operationId": "7fa62a51fcbadc484b351d7c931a474c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User berhasil dihapus"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/register": {
+            "post": {
+                "tags": [
+                    "Autentikasi"
+                ],
+                "summary": "Daftar pengguna baru",
+                "operationId": "6796c44e1f6079c411abbfed066c5907",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Nama lengkap pengguna",
+                                        "type": "string",
+                                        "example": "Budi Santoso"
+                                    },
+                                    "email": {
+                                        "description": "Alamat email unik",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "budi@example.com"
+                                    },
+                                    "password": {
+                                        "description": "Kata sandi minimal 8 karakter",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "rahasia123"
+                                    },
+                                    "password_confirmation": {
+                                        "description": "Konfirmasi kata sandi",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "rahasia123"
+                                    },
+                                    "role": {
+                                        "description": "Peran pengguna",
+                                        "type": "string",
+                                        "enum": [
+                                            "student",
+                                            "admin"
+                                        ],
+                                        "example": "student"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Pengguna berhasil didaftarkan",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Pengguna berhasil didaftarkan"
+                                        },
+                                        "access_token": {
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Kesalahan validasi data"
+                    }
+                }
+            }
+        },
+        "/api/v1/login": {
+            "post": {
+                "tags": [
+                    "Autentikasi"
+                ],
+                "summary": "Masuk ke sistem",
+                "operationId": "da2ca4d7a5cdec77b8b45a20373535cb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "budi@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "rahasia123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login berhasil"
+                                        },
+                                        "access_token": {
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Kredensial tidak valid (Email belum terdaftar atau kata sandi salah)"
+                    },
+                    "422": {
+                        "description": "Kesalahan validasi data atau akun tidak ditemukan"
+                    }
+                }
+            }
+        },
+        "/api/v1/logout": {
+            "post": {
+                "tags": [
+                    "Autentikasi"
+                ],
+                "summary": "Keluar dari sistem",
+                "operationId": "c4eddaf1a2e990cc90e4326c0d731d41",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil keluar",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Berhasil keluar"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Tidak terautentikasi"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/me": {
+            "get": {
+                "tags": [
+                    "Autentikasi"
+                ],
+                "summary": "Dapatkan profil pengguna yang sedang masuk",
+                "description": "Endpoint ini memerlukan token Bearer yang valid. Pastikan Anda telah melakukan login dan memasukkan token melalui tombol 'Authorize' di atas.",
+                "operationId": "47353adbf2a751f3f7deac7cc52ea517",
+                "responses": {
+                    "200": {
+                        "description": "Data pengguna yang terautentikasi",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Tidak terautentikasi"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/refresh-token": {
+            "post": {
+                "tags": [
+                    "Autentikasi"
+                ],
+                "summary": "Perbarui token akses",
+                "description": "Gunakan refresh_token untuk mendapatkan access_token yang baru.",
+                "operationId": "2cc587dcdbd87fbe33460b0b274cea3f",
+                "responses": {
+                    "200": {
+                        "description": "Token berhasil diperbarui. access_token baru di body, refresh_token baru di Set-Cookie.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Refresh token tidak valid atau sudah kedaluwarsa"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/forgot-password": {
+            "post": {
+                "tags": [
+                    "Atur Ulang Kata Sandi"
+                ],
+                "summary": "Kirim tautan atur ulang kata sandi melalui email",
+                "operationId": "8a24c9ad448db48934ec72763d79a359",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "Alamat email pengguna",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "budi@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Tautan atur ulang berhasil dikirim",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Tautan atur ulang berhasil dikirim"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Kesalahan validasi data"
+                    }
+                }
+            }
+        },
+        "/api/v1/reset-password": {
+            "post": {
+                "tags": [
+                    "Atur Ulang Kata Sandi"
+                ],
+                "summary": "Atur ulang kata sandi pengguna",
+                "operationId": "e1fec04a24297c4e70c35533b5621842",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "token",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "description": "Token dari email",
+                                        "type": "string",
+                                        "example": "TOKEN_DISINI"
+                                    },
+                                    "email": {
+                                        "description": "Alamat email",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "budi@example.com"
+                                    },
+                                    "password": {
+                                        "description": "Kata sandi baru",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "rahasia_baru123"
+                                    },
+                                    "password_confirmation": {
+                                        "description": "Konfirmasi kata sandi baru",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "rahasia_baru123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Kata sandi berhasil diatur ulang",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Kata sandi berhasil diatur ulang"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Kesalahan validasi data"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Masukkan token Bearer untuk akses API",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Manajemen Izin",
+            "description": "Endpoint untuk mengelola izin (permissions)"
+        },
+        {
+            "name": "Manajemen Role",
+            "description": "Endpoint untuk mengelola role dan izin"
+        },
+        {
+            "name": "Manajemen User Admin",
+            "description": "Endpoint admin untuk mengelola user dan role mereka"
+        },
+        {
+            "name": "Autentikasi",
+            "description": "Autentikasi"
+        },
+        {
+            "name": "Atur Ulang Kata Sandi",
+            "description": "Atur Ulang Kata Sandi"
+        }
+    ]
+}
