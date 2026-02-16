@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizQuestionController;
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     // User Management
@@ -15,5 +17,9 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
     // Level Management
     Route::apiResource('levels',LevelController::class);
+
+    // Quiz Management
+    Route::apiResource('quizzes', QuizController::class);
+    Route::apiResource('quiz-questions', QuizQuestionController::class);
 
 });
