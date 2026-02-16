@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LevelController;
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     // User Management
@@ -11,4 +12,8 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
     // Permission Management
     require __DIR__ . '/admin/permissions.php';
+
+    // Level Management
+    Route::apiResource('levels',LevelController::class);
+
 });
