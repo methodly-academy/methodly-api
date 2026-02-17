@@ -62,6 +62,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Pengguna berhasil didaftarkan',
             'access_token' => $accessToken,
+            'refresh_token' => $refreshToken,
             'token_type' => 'Bearer',
             'user' => $user->load('roles', 'permissions'),
         ], 201)->cookie('refresh_token', $refreshToken, 60 * 24 * 7, null, null, true, true);
@@ -127,6 +128,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Login berhasil',
             'access_token' => $accessToken,
+            'refresh_token' => $refreshToken,
             'token_type' => 'Bearer',
             'user' => $user->load('roles', 'permissions'), 
         ])->cookie('refresh_token', $refreshToken, 60 * 24 * 7, null, null, true, true);
@@ -196,7 +198,7 @@ class AuthController extends Controller
      */
     public function refreshToken(Request $request)
     {
-        $token = $request->cookie('refresh_token');
+        $token = $request->cookie('refresh_token') ?? $request->bearerToken();
 
         if (!$token) {
             return response()->json(['message' => 'Refresh token tidak ditemukan'], 401);
@@ -205,7 +207,7 @@ class AuthController extends Controller
         $accessTokenModel = \Laravel\Sanctum\PersonalAccessToken::findToken($token);
 
         if (!$accessTokenModel || !$accessTokenModel->tokenable || !$accessTokenModel->can('refresh-token')) {
-            return response()->json(['message' => 'Refresh token tidak valid'], 401);
+            return response()->json(['message' => 'Token tidak valid untuk pembaruan'], 401);
         }
 
         if ($accessTokenModel->expires_at && $accessTokenModel->expires_at->isPast()) {
@@ -222,6 +224,7 @@ class AuthController extends Controller
 
         return response()->json([
             'access_token' => $newAccessToken,
+            'refresh_token' => $newRefreshToken,
             'token_type' => 'Bearer',
         ])->cookie('refresh_token', $newRefreshToken, 60 * 24 * 7, null, null, true, true);
     }
