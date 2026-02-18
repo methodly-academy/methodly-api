@@ -23,7 +23,8 @@ Route::prefix('v1')->group(function () {
     Route::prefix('admin')->group(function () {
         require __DIR__ . '/api/v1/admin.php';
     });
-    
+
     // Course Management
     Route::get('/courses',[CourseController::class,'index']);
+    Route::get('/courses/{course}',[CourseController::class,'show']);
 });

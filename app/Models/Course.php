@@ -14,7 +14,7 @@ class Course extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
-    protected $fillable = ['name','slug','description','thumbnail','type','price','isPublished'];
+    protected $fillable = ['name','slug','description','thumbnail','type','price', 'level_id','is_published'];
 
     // Tiap Course punya 1 level
     public function level(){
