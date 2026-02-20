@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             LevelSeeder::class,
             CourseSeeder::class,
+            ChapterSeeder::class,
+            QuizSeeder::class,
         ]);
     }
 }

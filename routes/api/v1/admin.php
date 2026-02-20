@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizQuestionController;
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     // User Management
@@ -22,4 +24,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::put('/courses/{course}',[CourseController::class, 'update']);
     Route::delete('/courses/{course}',[CourseController::class, 'destroy']);
 
+    // Quiz Management
+    Route::apiResource('quizzes', QuizController::class);
+    Route::apiResource('quiz-questions', QuizQuestionController::class);
 });

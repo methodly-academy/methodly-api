@@ -27,4 +27,7 @@ Route::prefix('v1')->group(function () {
     // Course Management
     Route::get('/courses',[CourseController::class,'index']);
     Route::get('/courses/{course}',[CourseController::class,'show']);
+
+    // Quiz Actions (Submit, History)
+    require __DIR__ . '/api/v1/quiz_actions.php';
 });

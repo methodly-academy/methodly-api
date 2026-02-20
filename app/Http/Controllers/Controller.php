@@ -22,8 +22,15 @@ namespace App\Http\Controllers;
  *     bearerFormat="JWT",
  *     description="Masukkan token Bearer untuk akses API"
  * )
+ * 
+ * @OA\Schema(
+ *     schema="SuccessResponse",
+ *     @OA\Property(property="status", type="string", example="success"),
+ *     @OA\Property(property="message", type="string", example="Operasi berhasil"),
+ *     @OA\Property(property="data", type="object", nullable=true)
+ * )
  */
 abstract class Controller
 {
-    //
+    use \App\Traits\ApiResponse;
 }

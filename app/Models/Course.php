@@ -55,5 +55,4 @@ class Course extends Model
     public function scopePublished(Builder $query){
         return $query->where('is_published',true);
     }
-
 }
