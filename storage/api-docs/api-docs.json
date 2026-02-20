@@ -790,9 +790,692 @@
                     }
                 }
             }
+        },
+        "/api/v1/quizzes/{id}/start": {
+            "post": {
+                "tags": [
+                    "Pengerjaan Quiz"
+                ],
+                "summary": "Memulai pengerjaan quiz baru",
+                "operationId": "bfafc51b1ae1c8e7c9bd279e428ebf54",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Kuis berhasil dimulai",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/attempts/{attemptId}/answer": {
+            "post": {
+                "tags": [
+                    "Pengerjaan Quiz"
+                ],
+                "summary": "Submit jawaban per soal",
+                "operationId": "148fee055de4b818dc6c4d294671cc03",
+                "parameters": [
+                    {
+                        "name": "attemptId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "question_id"
+                                ],
+                                "properties": {
+                                    "question_id": {
+                                        "type": "integer"
+                                    },
+                                    "option_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "answer_text": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Jawaban berhasil disimpan",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/attempts/{attemptId}/finish": {
+            "post": {
+                "tags": [
+                    "Pengerjaan Quiz"
+                ],
+                "summary": "Menyelesaikan pengerjaan quiz",
+                "operationId": "bcf9c0caa57f1283651ad9b5e276bc04",
+                "parameters": [
+                    {
+                        "name": "attemptId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Kuis berhasil diselesaikan",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/my-attempts": {
+            "get": {
+                "tags": [
+                    "Pengerjaan Quiz"
+                ],
+                "summary": "Riwayat pengerjaan quiz",
+                "operationId": "b943bfd94a48a80e7aca89b8255ed60d",
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mendapatkan daftar riwayat pengerjaan kuis"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/quizzes": {
+            "get": {
+                "tags": [
+                    "Manajemen Quiz"
+                ],
+                "summary": "Daftar kuis (Filter berdasarkan course_id atau chapter_id)",
+                "operationId": "05c735629fc82cecc0d70434f9c64305",
+                "parameters": [
+                    {
+                        "name": "course_id",
+                        "in": "query",
+                        "description": "ID Kursus untuk memfilter kuis",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "chapter_id",
+                        "in": "query",
+                        "description": "ID Bab untuk memfilter kuis",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mendapatkan daftar kuis",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/SuccessResponse"
+                                        },
+                                        {
+                                            "properties": {
+                                                "count": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Quiz"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Manajemen Quiz"
+                ],
+                "summary": "Buat quiz baru",
+                "operationId": "21a91d87120c1b106f12ca6224d55125",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "chapter_id",
+                                    "title"
+                                ],
+                                "properties": {
+                                    "chapter_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Quiz Dasar Laravel"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Kuis berhasil dibuat",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuccessResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/quizzes/{id}": {
+            "get": {
+                "tags": [
+                    "Manajemen Quiz"
+                ],
+                "summary": "Detail quiz",
+                "operationId": "793e810f7e66c553136b56328c0792ac",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mendapatkan detail kuis"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Manajemen Quiz"
+                ],
+                "summary": "Update quiz",
+                "operationId": "3b904f6ac8a881d2525b07f96f8bb091",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "chapter_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Quiz Laravel Lanjutan"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Kuis berhasil diperbarui"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Manajemen Quiz"
+                ],
+                "summary": "Hapus quiz",
+                "operationId": "b5d2887e98569a1d0c886a15c9d75866",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Kuis berhasil dihapus"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/quiz-questions": {
+            "get": {
+                "tags": [
+                    "Manajemen Pertanyaan Quiz"
+                ],
+                "summary": "Daftar pertanyaan quiz (Filter berdasarkan quiz_id)",
+                "operationId": "054a20ede71fe16122277069fcf7dbfd",
+                "parameters": [
+                    {
+                        "name": "quiz_id",
+                        "in": "query",
+                        "description": "ID Quiz untuk memfilter pertanyaan",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mendapatkan daftar pertanyaan kuis"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Manajemen Pertanyaan Quiz"
+                ],
+                "summary": "Buat pertanyaan quiz baru",
+                "operationId": "233c9492938b26dc9a6a33cada6d6bf0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "quiz_id",
+                                    "question_text",
+                                    "question_type"
+                                ],
+                                "properties": {
+                                    "quiz_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "question_text": {
+                                        "type": "string",
+                                        "example": "Apa itu Laravel?"
+                                    },
+                                    "question_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "multiple_choice",
+                                            "boolean",
+                                            "short_answer",
+                                            "essay"
+                                        ],
+                                        "example": "multiple_choice"
+                                    },
+                                    "points": {
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "explanation": {
+                                        "type": "string",
+                                        "example": "Laravel adalah framework PHP."
+                                    },
+                                    "options": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "option_text": {
+                                                    "type": "string",
+                                                    "example": "Framework PHP"
+                                                },
+                                                "is_correct": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Pertanyaan berhasil dibuat"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/quiz-questions/{id}": {
+            "get": {
+                "tags": [
+                    "Manajemen Pertanyaan Quiz"
+                ],
+                "summary": "Detail pertanyaan quiz",
+                "operationId": "d6b98f0ac56e05cb489cf4e83fd67340",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Berhasil mendapatkan detail pertanyaan kuis"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Manajemen Pertanyaan Quiz"
+                ],
+                "summary": "Update pertanyaan quiz",
+                "operationId": "60994c733a84aeab52c3eebbd1be2771",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "quiz_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "question_text": {
+                                        "type": "string",
+                                        "example": "Apa keunggulan Laravel?"
+                                    },
+                                    "question_type": {
+                                        "type": "string",
+                                        "example": "multiple_choice"
+                                    },
+                                    "points": {
+                                        "type": "integer",
+                                        "example": 15
+                                    },
+                                    "explanation": {
+                                        "type": "string",
+                                        "example": "Eloquent ORM adalah salah satunya."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Pertanyaan berhasil diperbarui"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Manajemen Pertanyaan Quiz"
+                ],
+                "summary": "Hapus pertanyaan quiz",
+                "operationId": "c80bdbbc8da552c27502ea0d2e12726a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pertanyaan berhasil dihapus"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
+        "schemas": {
+            "SuccessResponse": {
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Operasi berhasil"
+                    },
+                    "data": {
+                        "type": "object",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Quiz": {
+                "required": [
+                    "chapter_id",
+                    "title"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "chapter_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Quiz Dasar Laravel"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "QuizQuestion": {
+                "required": [
+                    "quiz_id",
+                    "question_text",
+                    "question_type"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "quiz_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "question_text": {
+                        "type": "string",
+                        "example": "Apa itu Laravel?"
+                    },
+                    "question_type": {
+                        "type": "string",
+                        "enum": [
+                            "multiple_choice",
+                            "boolean",
+                            "short_answer",
+                            "essay"
+                        ]
+                    },
+                    "points": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "explanation": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
@@ -822,6 +1505,18 @@
         {
             "name": "Atur Ulang Kata Sandi",
             "description": "Atur Ulang Kata Sandi"
+        },
+        {
+            "name": "Pengerjaan Quiz",
+            "description": "Pengerjaan Quiz"
+        },
+        {
+            "name": "Manajemen Quiz",
+            "description": "Manajemen Quiz"
+        },
+        {
+            "name": "Manajemen Pertanyaan Quiz",
+            "description": "Manajemen Pertanyaan Quiz"
         }
     ]
 }

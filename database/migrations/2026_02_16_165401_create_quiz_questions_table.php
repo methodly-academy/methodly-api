@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('quiz_id')->constrained('quizzes')->onDelete('cascade');
             $table->text('question_text');
+            $table->string('question_type')->default('multiple_choice'); // multiple_choice, boolean, short_answer, essay
+            $table->integer('points')->default(10);
+            $table->text('explanation')->nullable();
             $table->timestamps();
         });
 

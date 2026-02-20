@@ -9,18 +9,82 @@ use App\Http\Resources\QuizResource;
 
 class QuizController extends Controller
 {
-    public function index(): JsonResponse
+    /**
+     * @OA\Get(
+     *     path="/api/v1/admin/quizzes",
+     *     summary="Daftar kuis (Filter berdasarkan course_id atau chapter_id)",
+     *     tags={"Manajemen Quiz"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="course_id",
+     *         in="query",
+     *         required=false,
+     *         description="ID Kursus untuk memfilter kuis",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="chapter_id",
+     *         in="query",
+     *         required=false,
+     *         description="ID Bab untuk memfilter kuis",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200, 
+     *         description="Berhasil mendapatkan daftar kuis",
+     *         @OA\JsonContent(
+     *             allOf={
+     *                 @OA\Schema(ref="#/components/schemas/SuccessResponse"),
+     *                 @OA\Schema(
+     *                     @OA\Property(property="count", type="integer", example=1),
+     *                     @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Quiz"))
+     *                 )
+     *             }
+     *         )
+     *     )
+     * )
+     */
+    public function index(Request $request): JsonResponse
     {
-        $quizzes = Quiz::all();
+        $request->validate([
+            'course_id' => 'nullable|exists:courses,id',
+            'chapter_id' => 'nullable|exists:chapters,id',
+        ]);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'list of all quizzes',
-            'count' => $quizzes->count(),
-            'data' => QuizResource::collection($quizzes)
-        ], 200);
+        $quizzes = Quiz::when($request->chapter_id, function ($query, $chapter_id) {
+                return $query->where('chapter_id', $chapter_id);
+            })
+            ->when($request->course_id, function ($query, $course_id) {
+                return $query->whereHas('chapter', function ($q) use ($course_id) {
+                    $q->where('course_id', $course_id);
+                });
+            })
+            ->get();
+
+        return $this->ok('Berhasil mendapatkan daftar kuis', QuizResource::collection($quizzes), 200, ['count' => $quizzes->count()]);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/v1/admin/quizzes",
+     *     summary="Buat quiz baru",
+     *     tags={"Manajemen Quiz"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"chapter_id","title"},
+     *             @OA\Property(property="chapter_id", type="integer", example=1),
+     *             @OA\Property(property="title", type="string", example="Quiz Dasar Laravel")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201, 
+     *         description="Kuis berhasil dibuat",
+     *         @OA\JsonContent(ref="#/components/schemas/SuccessResponse")
+     *     )
+     * )
+     */
     public function store(Request $request): JsonResponse
     {
         $request->validate([
@@ -33,24 +97,42 @@ class QuizController extends Controller
             'title' => $request->title,
         ]);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'quiz created successfully',
-            'data' => new QuizResource($quiz),
-        ], 201);
+        return $this->ok('Kuis berhasil dibuat', new QuizResource($quiz), 201);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/v1/admin/quizzes/{id}",
+     *     summary="Detail quiz",
+     *     tags={"Manajemen Quiz"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Berhasil mendapatkan detail kuis")
+     * )
+     */
     public function show($id): JsonResponse
     {
         $quiz = Quiz::findOrFail($id);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'quiz detail',
-            'data' => new QuizResource($quiz),
-        ], 200);
+        return $this->ok('Berhasil mendapatkan detail kuis', new QuizResource($quiz));
     }
 
+    /**
+     * @OA\Put(
+     *     path="/api/v1/admin/quizzes/{id}",
+     *     summary="Update quiz",
+     *     tags={"Manajemen Quiz"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             @OA\Property(property="chapter_id", type="integer", example=1),
+     *             @OA\Property(property="title", type="string", example="Quiz Laravel Lanjutan")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Kuis berhasil diperbarui")
+     * )
+     */
     public function update(Request $request, $id): JsonResponse
     {
         $quiz = Quiz::findOrFail($id);
@@ -62,21 +144,24 @@ class QuizController extends Controller
 
         $quiz->update($request->only(['chapter_id', 'title']));
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'quiz updated successfully',
-            'data' => new QuizResource($quiz)
-        ], 200);
+        return $this->ok('Kuis berhasil diperbarui', new QuizResource($quiz));
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/v1/admin/quizzes/{id}",
+     *     summary="Hapus quiz",
+     *     tags={"Manajemen Quiz"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Kuis berhasil dihapus")
+     * )
+     */
     public function destroy($id): JsonResponse
     {
         $quiz = Quiz::findOrFail($id);
         $quiz->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'quiz deleted successfully'
-        ], 200);
+        return $this->ok('Kuis berhasil dihapus');
     }
 }

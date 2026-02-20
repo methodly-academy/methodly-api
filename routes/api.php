@@ -21,4 +21,7 @@ Route::prefix('v1')->group(function () {
     Route::prefix('admin')->group(function () {
         require __DIR__ . '/api/v1/admin.php';
     });
+
+    // Quiz Actions (Submit, History)
+    require __DIR__ . '/api/v1/quiz_actions.php';
 });
