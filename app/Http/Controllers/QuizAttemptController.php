@@ -90,7 +90,7 @@ class QuizAttemptController extends Controller
             }
         }
 
-        // Upsert answer (jika user menjawab ulang soal yang sama dalam attempt yang sama)
+
         $answer = QuizAttemptAnswer::updateOrCreate(
             [
                 'quiz_attempt_id' => $attempt->id,

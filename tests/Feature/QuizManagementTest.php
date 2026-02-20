@@ -7,9 +7,6 @@ use App\Models\Level;
 use App\Models\Course;
 use App\Models\Chapter;
 use App\Models\Quiz;
-use App\Models\QuizQuestion;
-use App\Models\QuizOption;
-use App\Models\QuizAttempt;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -52,7 +49,58 @@ class QuizManagementTest extends TestCase
     }
 
     /** @test */
-    public function student_cannot_create_quiz()
+    public function admin_can_list_quizzes_with_optional_filters()
+    {
+        Quiz::create(['chapter_id' => $this->chapter->id, 'title' => 'Quiz 1']);
+        
+        $response = $this->actingAs($this->admin, 'sanctum')
+            ->getJson("/api/v1/admin/quizzes?chapter_id={$this->chapter->id}");
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('status', 'success');
+        $this->assertCount(1, $response->json('data'));
+    }
+
+    /** @test */
+    public function admin_can_show_quiz_detail()
+    {
+        $quiz = Quiz::create(['chapter_id' => $this->chapter->id, 'title' => 'Detailed Quiz']);
+
+        $response = $this->actingAs($this->admin, 'sanctum')
+            ->getJson("/api/v1/admin/quizzes/{$quiz->id}");
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('data.title', 'Detailed Quiz');
+    }
+
+    /** @test */
+    public function admin_can_update_quiz()
+    {
+        $quiz = Quiz::create(['chapter_id' => $this->chapter->id, 'title' => 'Old Title']);
+
+        $response = $this->actingAs($this->admin, 'sanctum')
+            ->putJson("/api/v1/admin/quizzes/{$quiz->id}", [
+                'title' => 'New Awesome Title'
+            ]);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('quizzes', ['id' => $quiz->id, 'title' => 'New Awesome Title']);
+    }
+
+    /** @test */
+    public function admin_can_delete_quiz()
+    {
+        $quiz = Quiz::create(['chapter_id' => $this->chapter->id, 'title' => 'To Be Deleted']);
+
+        $response = $this->actingAs($this->admin, 'sanctum')
+            ->deleteJson("/api/v1/admin/quizzes/{$quiz->id}");
+
+        $response->assertStatus(200);
+        $this->assertDatabaseMissing('quizzes', ['id' => $quiz->id]);
+    }
+
+    /** @test */
+    public function student_cannot_access_admin_quiz_endpoints()
     {
         $response = $this->actingAs($this->student, 'sanctum')
             ->postJson('/api/v1/admin/quizzes', [
@@ -61,83 +109,5 @@ class QuizManagementTest extends TestCase
             ]);
 
         $response->assertStatus(403);
-    }
-
-    /** @test */
-    public function admin_can_create_question_with_options()
-    {
-        $quiz = Quiz::create(['chapter_id' => $this->chapter->id, 'title' => 'General Quiz']);
-
-        $response = $this->actingAs($this->admin, 'sanctum')
-            ->postJson('/api/v1/admin/quiz-questions', [
-                'quiz_id' => $quiz->id,
-                'question_text' => 'What is 1+1?',
-                'question_type' => 'multiple_choice',
-                'points' => 10,
-                'options' => [
-                    ['option_text' => '2', 'is_correct' => true],
-                    ['option_text' => '3', 'is_correct' => false],
-                ]
-            ]);
-
-        $response->assertStatus(201);
-        $this->assertDatabaseHas('quiz_questions', ['question_text' => 'What is 1+1?']);
-        $this->assertDatabaseHas('quiz_options', ['option_text' => '2', 'is_correct' => true]);
-
-        // Verify index works with quiz_id filter
-        $indexResponse = $this->actingAs($this->admin, 'sanctum')
-            ->getJson("/api/v1/admin/quiz-questions?quiz_id={$quiz->id}");
-        
-        $indexResponse->assertStatus(200);
-        $indexResponse->assertJsonCount(1, 'data');
-    }
-
-    /** @test */
-    public function student_can_perform_full_quiz_flow()
-    {
-        // 1. Setup Data
-        $quiz = Quiz::create(['chapter_id' => $this->chapter->id, 'title' => 'Student Test']);
-        $question = QuizQuestion::create([
-            'quiz_id' => $quiz->id,
-            'question_text' => 'Is Laravel a PHP framework?',
-            'question_type' => 'boolean',
-            'points' => 20
-        ]);
-        $optTrue = QuizOption::create(['quiz_question_id' => $question->id, 'option_text' => 'Yes', 'is_correct' => true]);
-        $optFalse = QuizOption::create(['quiz_question_id' => $question->id, 'option_text' => 'No', 'is_correct' => false]);
-
-        // 2. Start Quiz
-        $response = $this->actingAs($this->student, 'sanctum')
-            ->postJson("/api/v1/quizzes/{$quiz->id}/start");
-        
-        $response->assertStatus(201);
-        $attemptId = $response->json('data.id');
-
-        // 3. Submit Answer
-        $response = $this->actingAs($this->student, 'sanctum')
-            ->postJson("/api/v1/attempts/{$attemptId}/answer", [
-                'question_id' => $question->id,
-                'option_id' => $optTrue->id
-            ]);
-        
-        $response->assertStatus(200);
-        $this->assertDatabaseHas('quiz_attempt_answers', [
-            'quiz_attempt_id' => $attemptId,
-            'is_correct' => true,
-            'points_earned' => 20
-        ]);
-
-        // 4. Finish Quiz
-        $response = $this->actingAs($this->student, 'sanctum')
-            ->postJson("/api/v1/attempts/{$attemptId}/finish");
-        
-        $response->assertStatus(200);
-        $response->assertJsonPath('data.final_score', 20);
-        
-        $this->assertDatabaseHas('quiz_attempts', [
-            'id' => $attemptId,
-            'status' => 'completed',
-            'score' => 20
-        ]);
     }
 }

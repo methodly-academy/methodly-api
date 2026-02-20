@@ -21,13 +21,13 @@ class QuizSeeder extends Seeder
             return;
         }
 
-        // 1. Create a Quiz
+
         $quiz = Quiz::create([
             'chapter_id' => $chapter->id,
             'title' => 'Fundamental Laravel Quiz',
         ]);
 
-        // 2. Create Multiple Choice Question
+
         $q1 = QuizQuestion::create([
             'quiz_id' => $quiz->id,
             'question_text' => 'Apa command untuk membuat controller di Laravel?',
@@ -40,7 +40,7 @@ class QuizSeeder extends Seeder
         QuizOption::create(['quiz_question_id' => $q1->id, 'option_text' => 'php artisan generate:controller', 'is_correct' => false]);
         QuizOption::create(['quiz_question_id' => $q1->id, 'option_text' => 'php artisan create:controller', 'is_correct' => false]);
 
-        // 3. Create Boolean Question
+
         $q2 = QuizQuestion::create([
             'quiz_id' => $quiz->id,
             'question_text' => 'Laravel adalah framework berbasis Javascript.',
@@ -52,7 +52,7 @@ class QuizSeeder extends Seeder
         QuizOption::create(['quiz_question_id' => $q2->id, 'option_text' => 'True', 'is_correct' => false]);
         QuizOption::create(['quiz_question_id' => $q2->id, 'option_text' => 'False', 'is_correct' => true]);
 
-        // 4. Create Short Answer Question
+
         $q3 = QuizQuestion::create([
             'quiz_id' => $quiz->id,
             'question_text' => 'Siapa pencipta Laravel?',
@@ -61,7 +61,7 @@ class QuizSeeder extends Seeder
             'explanation' => 'Taylor Otwell adalah pencipta Laravel.'
         ]);
 
-        // 5. Create Essay Question
+
         $q4 = QuizQuestion::create([
             'quiz_id' => $quiz->id,
             'question_text' => 'Jelaskan apa itu Eloquent ORM menurut pemahaman Anda!',
