@@ -19,17 +19,17 @@ class ChapterSeeder extends Seeder
             return;
         }
 
-        Chapter::create([
+        Chapter::firstOrCreate([
             'course_id' => $course->id,
             'name' => 'Persiapan',
         ]);
 
-        Chapter::create([
+        Chapter::firstOrCreate([
             'course_id' => $course->id,
             'name' => 'Latihan',
         ]);
 
-        Chapter::create([
+        Chapter::firstOrCreate([
             'course_id' => $course->id,
             'name' => 'Mastering',
         ]);

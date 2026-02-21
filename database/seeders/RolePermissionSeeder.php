@@ -31,11 +31,11 @@ class RolePermissionSeeder extends Seeder
 
         $createdPermissions = [];
         foreach ($permissions as $permission) {
-            $createdPermissions[$permission] = Permission::create(['name' => $permission, 'guard_name' => 'web']);
+            $createdPermissions[$permission] = Permission::findOrCreate($permission, 'web');
         }
 
         // --- Role Student ---
-        $studentRole = Role::create(['name' => 'student', 'guard_name' => 'web']);
+        $studentRole = Role::findOrCreate('student', 'web');
         $studentRole->givePermissionTo([
             $createdPermissions['enroll in course'], 
             $createdPermissions['track progress'], 
@@ -43,24 +43,32 @@ class RolePermissionSeeder extends Seeder
         ]);
 
         // --- Role Admin ---
-        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'web']);
+        $adminRole = Role::findOrCreate('admin', 'web');
         // Admin mendapatkan semua permission
         $adminRole->givePermissionTo(Permission::all());
 
         // Default Admin
-        $adminUser = User::factory()->create([
-            'name' => 'Admin Methodly',
-            'email' => 'admin@methodly.com',
-            'password' => Hash::make('password'),
-        ]);
-        $adminUser->assignRole($adminRole);
+        $adminUser = User::updateOrCreate(
+            ['email' => 'admin@methodly.com'],
+            [
+                'name' => 'Admin Methodly',
+                'password' => Hash::make('password'),
+            ]
+        );
+        if (!$adminUser->hasRole('admin')) {
+            $adminUser->assignRole($adminRole);
+        }
 
         // Default Student
-        $studentUser = User::factory()->create([
-            'name' => 'Student User',
-            'email' => 'student@methodly.com',
-            'password' => Hash::make('password'),
-        ]);
-        $studentUser->assignRole($studentRole);
+        $studentUser = User::updateOrCreate(
+            ['email' => 'student@methodly.com'],
+            [
+                'name' => 'Student User',
+                'password' => Hash::make('password'),
+            ]
+        );
+        if (!$studentUser->hasRole('student')) {
+            $studentUser->assignRole($studentRole);
+        }
     }
 }

@@ -14,14 +14,16 @@ class LevelSeeder extends Seeder
      */
     public function run(): void
     {
-        Level::create([
-            'name' => 'beginner',
+        Level::firstOrCreate([
             'slug' => Str::slug('beginner')
+        ], [
+            'name' => 'beginner',
         ]);
 
-        Level::create([
-            'name' => 'expert',
+        Level::firstOrCreate([
             'slug' => Str::slug('expert')
-         ]); 
+        ], [
+            'name' => 'expert',
+        ]); 
     }
 }

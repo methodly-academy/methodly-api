@@ -17,10 +17,9 @@ class QuizSeeder extends Seeder
     {
         $chapter = Chapter::first();
 
-        if (!$chapter) {
+        if (!$chapter || Quiz::where('title', 'Fundamental Laravel Quiz')->exists()) {
             return;
         }
-
 
         $quiz = Quiz::create([
             'chapter_id' => $chapter->id,
