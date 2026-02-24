@@ -14,7 +14,7 @@ class QuizQuestionController extends Controller
     /**
      * @OA\Get(
      *     path="/api/v1/admin/quiz-questions",
-     *     summary="Daftar pertanyaan quiz (Filter berdasarkan quiz_id)",
+     *     summary="Daftar pertanyaan kuis (Filter berdasarkan quiz_id, pencarian, dan paginasi)",
      *     tags={"Manajemen Pertanyaan Quiz"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -24,20 +24,50 @@ class QuizQuestionController extends Controller
      *         description="ID Quiz untuk memfilter pertanyaan",
      *         @OA\Schema(type="integer")
      *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         required=false,
+     *         description="Pencarian berdasarkan teks pertanyaan",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         required=false,
+     *         description="Limit data per halaman (default 10, max 50)",
+     *         @OA\Schema(type="integer")
+     *     ),
      *     @OA\Response(response=200, description="Berhasil mendapatkan daftar pertanyaan kuis")
      * )
      */
     public function index(Request $request): JsonResponse
     {
         $request->validate([
-            'quiz_id' => 'required|exists:quizzes,id'
+            'quiz_id' => 'required|exists:quizzes,id',
+            'search'  => 'nullable|string',
+            'limit'   => 'nullable|integer|min:1|max:50'
         ]);
 
-        $questions = QuizQuestion::with('options')
-            ->where('quiz_id', $request->quiz_id)
-            ->get();
+        $keyword = $request->input('search');
+        $limit   = min($request->input('limit', 10), 50);
 
-        return $this->ok('Berhasil mendapatkan daftar pertanyaan kuis', QuizQuestionResource::collection($questions), 200, ['count' => $questions->count()]);
+        $questions = QuizQuestion::query()
+            ->with('options')
+            ->where('quiz_id', $request->quiz_id)
+            ->search($keyword)
+            ->paginate($limit);
+
+        return $this->ok('Berhasil mendapatkan daftar pertanyaan kuis', QuizQuestionResource::collection($questions), 200, [
+            'total_items' => $questions->total(),
+            'pagination' => [
+                'current_page' => $questions->currentPage(),
+                'per_page' => $questions->perPage(),
+                'last_page' => $questions->lastPage(),
+                'next_page_url' => $questions->nextPageUrl(),
+                'prev_page_url' => $questions->previousPageUrl(),
+            ]
+        ]);
     }
 
     /**

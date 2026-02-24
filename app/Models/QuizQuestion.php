@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\Builder;
+
 /**
  * @OA\Schema(
  *     schema="QuizQuestion",
@@ -33,5 +35,15 @@ class QuizQuestion extends Model
     public function options()
     {
         return $this->hasMany(QuizOption::class);
+    }
+
+    // Pencarian Pertanyaan berdasarkan teks
+    public function scopeSearch(Builder $query, ?string $keyword)
+    {
+        if ($keyword) {
+            return $query->where('question_text', 'ILIKE', "%{$keyword}%");
+        }
+        
+        return $query;
     }
 }
